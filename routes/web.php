@@ -18,6 +18,18 @@ Route::post('/register', [AuthController::class, 'register'])->name('register');
 */
 
 Route::get('/', function () {
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "laravel_db";
+    try{
+        $conn = new mysqli($servername, $username, $password, $dbname);
+    }catch(Exception $e){
+
+        return view("minigame");
+    }
+    
+
     $database = env('DB_DATABASE'); // Get the database name from .env
     $exists = DB::select("SHOW DATABASES LIKE '{$database}'");
     return view('welcome');
