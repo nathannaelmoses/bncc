@@ -25,12 +25,7 @@
     <body>
 
         <h2>PT ChipiChapa Employees</h2>
-        <nav id="navBar">
-            <button id="View">View All Karyawan</button>
-            
-            <button id="Delete">Pecat Karyawan</button>
-            <button id="Insert">Tambah Karyawan</button>
-        </nav>
+        <button id="View">View All Karyawan</button>
         <table id="tableView" >
             <tr class="borderan">
                 <th class="borderan">Name</th>
@@ -86,7 +81,6 @@
             <br>
             <button id="Insert" type="submit">Insert Karyawan</button>
         </form>
-
     </body>
     <script>
         document.getElementById("View").addEventListener("click", async () => {
@@ -127,7 +121,7 @@
             let telp = document.getElementById("telpU").value;
 
 
-            let data = await fetch("{{ route('update') }}", {
+            let response = await fetch("{{ route('update') }}", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -140,8 +134,12 @@
                     "telp":telp
                 })
             })
-            alert("Updated succesfully")
-            // location.reload();
+            if (response.ok) {
+                alert("Update successful!");
+            } else if (response.status === 400) {
+                alert("There is no such Karyawan.");
+            }
+            location.reload();
 
         })
         
@@ -150,7 +148,7 @@
             event.preventDefault();
             const crsftoken =document.querySelector('meta[name="csrf-token"]').getAttribute("content");
             let username = document.getElementById("usernameD").value;
-            let data = await fetch("{{ route('delete') }}", {
+            let response = await fetch("{{ route('delete') }}", {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -160,9 +158,12 @@
                     "name":username
                 })
             })
-            alert("Deleted succesfully")
-            // location.reload();
-
+            if (response.ok) {
+                alert("Update successful!");
+            } else if (response.status === 400) {
+                alert("There is no such Karyawan.");
+            }
+            location.reload();
         })
 
         document.getElementById("insertForm").addEventListener("submit", async () => {
@@ -173,8 +174,25 @@
             let address = document.getElementById("addressI").value;
             let telp = document.getElementById("telpI").value;
 
+            if (username.length < 5 || username.length > 20) {
+                alert("Nama Karyawan harus 5-20 karakter bro");
+                return;
+            }
+            
+            if (parseInt(age) <= 20) {
+                alert("Umur Karyawan mesti lebih dari 20 tahun bro");
+                return;
+            }
+            if (address.length < 10 || address.length > 40) {
+                alert("Alamat Karyawan harus 10-40 karakter bro");
+                return;
+            }
+            if (!/^08\d{7,10}$/.test(telp)) {
+                alert("Nomor telpon gak valid");
+                return;
+            }
 
-            let data = await fetch("{{ route('insert') }}", {
+            let response = await fetch("{{ route('insert') }}", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -188,7 +206,7 @@
                 })
             })
             alert("Inserted succesfully")
-            // location.reload();
+            location.reload();
 
         })
         

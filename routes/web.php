@@ -83,10 +83,6 @@ Route::post("/view", function(Request $req){
     return response()->json(['data' => $karyawan], 201);
 })->name('view');
 
-Route::get('/home', function(){
-    return redirect("/toLoginPage");
-})->name('home');
-
 Route::post('/home', function(Request $req){
     $users = DB::select("SELECT * FROM Users WHERE Username LIKE ? && Password LIKE ?",[$req->input("email"),$req->input("password")]);
     if(empty($users)){
